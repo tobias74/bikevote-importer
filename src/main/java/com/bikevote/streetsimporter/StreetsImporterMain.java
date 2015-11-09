@@ -135,7 +135,7 @@ public class StreetsImporterMain {
         EntityFilter filter = new EntityFilter(false, true, false);
 
         // Set the binary OSM source file
-        Osmonaut naut = new Osmonaut("/home/tobias/Downloads/europe-latest.osm.pbf", filter);
+        Osmonaut naut = new Osmonaut("/home/tobias/Downloads/germany-latest.osm.pbf", filter);
 
         // Start scanning by implementing the interface
         naut.scan(new IOsmonautReceiver() {
