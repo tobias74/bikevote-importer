@@ -23,6 +23,15 @@
             <artifactId>jest</artifactId>
             <version>0.1.6</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.openstreetmap.osmosis</groupId>
+            <artifactId>osmosis-osm-binary</artifactId>
+            <version>0.43-RELEASE</version>
+        </dependency>
+        
+        
+        
     </dependencies>
     
 
