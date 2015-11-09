@@ -199,7 +199,7 @@ public class StreetsImporterMain {
                             if (StreamSupport.stream(currentNode.getRelationships().spliterator(), false).filter(
                                     relationship
                                     -> relationship.getStartNode().equals(nextNode) || relationship.getEndNode().equals(nextNode)
-                            ).count() > 1) {
+                            ).count() > 0) {
                                 System.out.println("relationship already exists.");
                             } else {
                                 Relationship relationship = currentNode.createRelationshipTo(nextNode, RelTypes.ROAD);
