@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.StreamSupport;
 import net.morbz.osmonaut.EntityFilter;
 import net.morbz.osmonaut.IOsmonautReceiver;
 import net.morbz.osmonaut.Osmonaut;
@@ -211,7 +212,7 @@ public class StreetsImporterMain {
                         if (nodes.hasNext()) {
                             //System.out.println("OSM-Node already there!!!");
                             nextNode = nodes.next();
-                            if (nodes.hasNext()){
+                            if (nodes.hasNext()) {
                                 System.out.print("we had a double node osm id!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                                 throw new RuntimeException("This should not happen!!!!");
                             }
@@ -220,6 +221,8 @@ public class StreetsImporterMain {
                             nextNode = graphDb.createNode(DynamicLabel.label("RoadNode"));
                             nextNode.setProperty("bikevote_id", uniqueID);
                         }
+
+                        nodes.close();
 
                         nextNode.setProperty("lat", node.getLatlon().getLat());
                         nextNode.setProperty("lon", node.getLatlon().getLon());
@@ -232,9 +235,17 @@ public class StreetsImporterMain {
                             nextNode.setProperty("elevation", Math.round(Float.parseFloat(nextTags.get("ele"))));
                         }
 
+                        
                         if (currentNode != null) {
-                            Relationship relationship = currentNode.createRelationshipTo(nextNode, RelTypes.ROAD);
-                            relationship.setProperty("length_km", 5);
+                            if (StreamSupport.stream(currentNode.getRelationships().spliterator(), false).filter(
+                                    relationship
+                                    -> relationship.getStartNode().equals(nextNode) || relationship.getEndNode().equals(nextNode)
+                            ).count() > 1) {
+                                System.out.println("relationship already exists.");
+                            } else {
+                                Relationship relationship = currentNode.createRelationshipTo(nextNode, RelTypes.ROAD);
+                                relationship.setProperty("length_km", 5);
+                            }
                         }
 
                         currentNode = nextNode;
